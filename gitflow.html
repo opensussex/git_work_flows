@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>gitflow</title>
+    <script src="bower_components/gitgraph.js/build/gitgraph.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bower_components/gitgraph.js/build/gitgraph.css" />
+</head>
+<body>
+    <canvas id="gitGraph"></canvas>    
+</body>
+<script>
+var gitgraph = new GitGraph({
+  template: "metro",
+  orientation: "horizontal",
+  mode: "compact"
+});
+
+var master = gitgraph.branch("master");
+master.commit('initial commit');        // 3 commits upon HEAD
+var develop = master.branch("develop");    // New branch from HEAD
+develop.commit('branch develop');
+develop.commit('another commit on develop');
+
+var myfeature = develop.branch("myfeature"); // New branch from develop
+myfeature.commit('new feature commit');
+myfeature.commit('keep it coming');
+develop.commit('another one');
+// Well, if you need to go deeper…
+
+var hotfix = gitgraph.branch({
+  parentBranch: master,
+  name: "hotfix",
+  column: 2             // which column index it should be displayed in
+});
+
+hotfix.commit('fix');
+</script>
+</html>

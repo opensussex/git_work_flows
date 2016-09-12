@@ -1,0 +1,18 @@
+{
+  "name": "git_work_flows",
+  "homepage": "https://github.com/opensussex/git_work_flows",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "gitgraph.js": "^1.4.0"
+  }
+}
