@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>gitflow</title>
+    <script src="bower_components/gitgraph.js/build/gitgraph.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bower_components/gitgraph.js/build/gitgraph.css" />
+</head>
+<body>
+    <h1>Git Flow - features merged into release branch not develop</h1>
+    <p>
+        Git flow, but instead of merging into develop for completed features, features are merged into a release branch
+    </p>
+    <canvas id="gitGraph"></canvas>    
+</body>
+<script>
+var myTemplateConfig = {
+  branch: {
+    lineWidth: 8,
+    spacingX: 50,
+    showLabel: true,                  // display branch names on graph
+  },
+  commit: {
+    spacingY: -50,
+    dot: {
+      size: 12
+    },
+    message: {
+      displayAuthor: true,
+      displayBranch: false,
+      displayHash: false,
+      font: "normal 12pt Helvetica"
+    },
+    shouldDisplayTooltipsInCompactMode: true, // default = true
+    tooltipHTMLFormatter: function ( commit ) {
+      return "" + commit.sha1 + "" + ": " + commit.message;
+    }
+  }
+};
+var myTemplate = new GitGraph.Template( myTemplateConfig );
+
+
+var gitgraph = new GitGraph({
+  template: myTemplate,
+  orientation: "horizontal",
+  mode: "compact"
+});
+
+
+
+
+var master = gitgraph.branch("master");
+master.commit('initial commit');        // 3 commits upon HEAD
+var develop = master.branch("develop");    // New branch from HEAD
+develop.commit('create develop branch off of master');
+var hotfix = master.branch("hotfix");
+hotfix.commit('add in some changes to hotfix');
+hotfix.commit('finalise hotfix');
+hotfix.merge(develop);
+hotfix.merge(master);
+var feature1 = develop.branch('feature1');
+feature1.commit('first commit to feature 1');
+var feature2 = develop.branch('feature2');
+feature2.commit('first commit to feature 2');
+feature1.commit('additional commits to feature 1');
+feature1.commit('fix issue on feature1');
+var release1 = develop.branch('release1');
+release1.commit('initial commit to create release branch');
+feature2.merge(release1);
+feature1.commit('additional fix for feature1');
+feature1.commit('final fixes for feature1');
+feature1.merge(release1);
+release1.commit('some fixes in release');
+release1.merge(develop);
+release1.merge(master);
+</script>
+</html>
