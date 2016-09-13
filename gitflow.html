@@ -9,33 +9,67 @@
     <link rel="stylesheet" type="text/css" href="bower_components/gitgraph.js/build/gitgraph.css" />
 </head>
 <body>
+    <h1>Git Flow</h1>
     <canvas id="gitGraph"></canvas>    
 </body>
 <script>
+var myTemplateConfig = {
+  branch: {
+    lineWidth: 8,
+    spacingX: 50,
+    showLabel: true,                  // display branch names on graph
+  },
+  commit: {
+    spacingY: -50,
+    dot: {
+      size: 12
+    },
+    message: {
+      displayAuthor: true,
+      displayBranch: false,
+      displayHash: false,
+      font: "normal 12pt Helvetica"
+    },
+    shouldDisplayTooltipsInCompactMode: true, // default = true
+    tooltipHTMLFormatter: function ( commit ) {
+      return "" + commit.sha1 + "" + ": " + commit.message;
+    }
+  }
+};
+var myTemplate = new GitGraph.Template( myTemplateConfig );
+
+
 var gitgraph = new GitGraph({
-  template: "metro",
+  template: myTemplate,
   orientation: "horizontal",
   mode: "compact"
 });
 
+
+
+
 var master = gitgraph.branch("master");
 master.commit('initial commit');        // 3 commits upon HEAD
 var develop = master.branch("develop");    // New branch from HEAD
-develop.commit('branch develop');
-develop.commit('another commit on develop');
-
+develop.commit('create develop branch off of master');
 var myfeature = develop.branch("myfeature"); // New branch from develop
-myfeature.commit('new feature commit');
-myfeature.commit('keep it coming');
-develop.commit('another one');
-// Well, if you need to go deeper…
+myfeature.commit('work on a new feature');
+myfeature.commit('some development work commited on new feature');
+var hotfix = master.branch('hotfix');
+hotfix.commit('hotfix - emergency fix');
+hotfix.commit('final fixes for the hotfix development')
+hotfix.merge(develop);
+hotfix.merge(master);
+//hotfix.delete();
+myfeature.commit('continued work on the feature');
+myfeature.merge(develop);
+//myfeature.delete();
 
-var hotfix = gitgraph.branch({
-  parentBranch: master,
-  name: "hotfix",
-  column: 2             // which column index it should be displayed in
-});
 
-hotfix.commit('fix');
+var release = develop.branch("release");
+release.commit('release is prepared').commit('commits into the release');
+release.merge(develop);
+release.merge(master);
+//release.delete();
 </script>
 </html>
