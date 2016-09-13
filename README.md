@@ -1,6 +1,6 @@
 # Collection of Example Git Work Flow Diagrams
 
-This will be a continud list of git workflows 
+This will be a continued list of git workflows using gitgraph.js
 
 Just do a 
     
